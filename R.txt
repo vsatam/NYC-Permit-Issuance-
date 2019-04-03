@@ -1,0 +1,40 @@
+R Script:
+
+#AGAIN, I HAVE I ADD MORE TO THIS DOC#
+
+library(ggplot2)
+library(rpart.plot)
+library(rpart)
+library(gbm)
+df <- read.csv("Brooklyn_2017.csv",stringsAsFactors = TRUE)
+df <- subset(df, select = -c(X,BOROUGH))
+
+sample_rows <- sample(nrow(df), size=.80 * nrow(df), replace=F)
+df.train <- df[sample_rows,]
+df.test <- df[-sample_rows,]
+attach(df)
+library(GoodmanKruskal)
+library(corrplot)
+varset1<- colnames(df)
+Status<- subset(df, select = varset1)
+GKmatrix1<- GKtauDataframe(Status)
+plot(GKmatrix1,cex=0.01
+
+
+
+library(rattle)
+
+##Removing necessary variables
+model2<-rpart(Job.Type~+Bldg.Type+Work.Type+Filing.Status+Permit.Type+Permit.Sequence..+Site.Fill+Permittee.s.License.Type+Owner.s.Business.Type,data=df.train, method = "class", maxdepth=3, cp=0.01)
+summary(model2)
+fancyRpartPlot(model2,cex=0.8)
+
+model1.pred.IS <- predict(model2,type="class")
+t1<-table(model1.pred.IS, df.train$Job.Type)
+accuracy1<-(sum(diag(t1))/sum(t1))*100
+
+df <- read.csv("Brooklyn_2018.csv",stringsAsFactors = TRUE)
+Jobs_2018 <- predict(model2,newdata=df,type="class")
+t2<-table(Jobs_2018, df$Job.Type)
+accuracy<-(sum(diag(t2))/sum(t2))*100
+
